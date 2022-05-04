@@ -1,11 +1,17 @@
 #include "../include/list.h"
+#include <stdlib.h>
 
 #define ADD 50
+
+int location, data;
 
 /* 创建一个空的顺序表 */
 hn* Create_table() {
 	//创建头结点
 	hn * head_node = (hn *)malloc(sizeof(hn));
+	if (head_node == NULL) {
+		return NULL;
+	}
 	head_node->length = 0;
 	head_node->total_element = 0;
 	head_node->p0 = NULL;
@@ -23,7 +29,7 @@ hn* Create_table() {
 		head_node = NULL;
 		return NULL;
 	}
-
+	
 	//创建完成
 	return head_node;
 }
@@ -84,6 +90,7 @@ int Calculate_total(hn* head_node) {
 	//头结点存在
 	if (head_node != NULL) {
 		//返回顺序表中数据元素的总量
+		printf("%d\n", head_node->total_element);
 		return head_node->total_element;
 	}
 	else {
@@ -99,6 +106,7 @@ int Get_first(hn* head_node) {
 		//顺序表存在且数据元素总量大于等于1
 		if (head_node->p0 != NULL && head_node->total_element >= 1) {
 			//返回表头元素的数据
+			printf("%d\n", *head_node->p0);
 			return *head_node->p0;
 		}
 	}
@@ -111,47 +119,57 @@ int Get_end(hn* head_node) {
 		//表存在且数据元素总量大于等于1
 		if (head_node->p0 != NULL && head_node->total_element >= 1) {
 			//返回表尾元素的数据
+			printf("%d\n", *(head_node->p0 + head_node->total_element - 1));
 			return *(head_node->p0 + head_node->total_element - 1);
 		}
 	}		
 }
 
 /* 获取某一元素的前驱 */
-int Get_front(hn* head_node, int n) {
+int Get_front(hn* head_node) {
+	printf("输入元素位置，以获取前驱：");
+	scanf_s("%d", &location);
 	//头结点存在且表存在且有数据元素
 	if (head_node != NULL && head_node->p0 != NULL && head_node->total_element >= 1) {
 		//当n指代的是第一个数据元素，无法获取其前驱
-		if (n == 1) {
+		if (location == 1) {
 			return fail;
 		}
 		else {
 			//当n指代的不是第一个数据元素，返回前驱
-			return *(head_node->p0 + n - 2);
+			printf("%d\n", *(head_node->p0 + location - 2));
+			return *(head_node->p0 + location - 2);
 		}
 	}
 }
 
 /* 获取某一元素的后继 */
-int Get_rear(hn* head_node, int n) {
+int Get_rear(hn* head_node) {
+	printf("输入元素位置，以获取后继：");
+	scanf_s("%d", &location);
 	//头结点存在且表存在且有数据元素
 	if (head_node != NULL && head_node->p0 != NULL && head_node->total_element >= 1) {
 		//当n指代的是最后一个数据元素，无法获取其后继
-		if (n == head_node->total_element) {
+		if (location == head_node->total_element) {
 			return fail;
 		}
 		else {
 			//当n指代的不是最后一个数据元素，返回后继
-			return *(head_node->p0 + n);
+			printf("%d\n", *(head_node->p0 + location));
+			return *(head_node->p0 + location);
 		}
 	}
 }
 
 /* 读取某一位置的数据元素的值 */
-int Read_values(hn* head_node, int n) {
+int Read_values(hn* head_node) {
+	printf("输入读取位置：");
+	scanf_s("%d", &location);
 	//头结点存在、表也存在、有数据元素
 	if (head_node != NULL && head_node->p0 != NULL && head_node->total_element >= 1) {
 		//返回读取到的值
-		return *(head_node->p0 + n - 1);
+		printf("%d\n", *(head_node->p0 + location - 1));
+		return *(head_node->p0 + location - 1);
 	}
 	else {
 		//读失败
@@ -160,13 +178,15 @@ int Read_values(hn* head_node, int n) {
 }
 
 /* 查找表中是否存在某个值，有匹配，则输出该数据元素的位置 */
-void Find_value(hn* head_node, int x) {
+void Find_value(hn* head_node) {
+	printf("输入查找值：");
+	scanf_s("%d", &data);
 	//头结点存在、表存在、有数据元素
 	if (head_node != NULL && head_node->p0 != NULL && head_node->total_element >= 1) {
 		//找出匹配的值
 		for (int i = 0; i < head_node->total_element; i++) {
-			if (x == *(head_node->p0 + i)) {
-				printf("%d ", i);
+			if (data == *(head_node->p0 + i)) {
+				printf("%d ", i + 1);
 			}
 		}
 		putchar('\n');
@@ -194,61 +214,66 @@ void Print_table(hn* head_node) {
 }
 
 /* 插入数据元素 */
-hn* Insert_elements(hn* head_node, int n, int x) {
+hn* Insert_elements(hn* head_node) {
+	printf("请输出插入位置以及数据，使用逗号分隔：");
+	scanf_s("%d,%d", &location, &data);
 	//头结点存在、表存在、要插入的位置合理，才能插入
-	if (head_node != NULL && head_node->p0 != NULL && n >= 0 && n <= (head_node->total_element + 1)) {
+	if (head_node != NULL && head_node->p0 != NULL && location >= 1 && location <= (head_node->total_element + 1)) {
 		int i;
 		//表没满
 		if (head_node->total_element < head_node->length) {
 			//头部插入
-			if (n == 1) {
+			if (location == 1) {
 				//从最后开始，先把所有元素往后移一位
 				for (i = head_node->total_element - 1; i >= 0; i--) {
 					*(head_node->p0 + i + 1) = *(head_node->p0 + i);
 				}
 				//将值x赋给首元素
-				*(head_node->p0) = x;
+				*(head_node->p0) = data;
 			}
-			else if (n == head_node->total_element) {	//尾部插入
+			else if (location == head_node->total_element) {	//尾部插入
 				//直接赋值
-				*(head_node->p0 + head_node->total_element) = x;
+				*(head_node->p0 + head_node->total_element) = data;
 			}
 			else {	//中间插入
 				//从最后一个元素开始，直到被插入位置的元素，将它们依次向后移动一位
-				for (i = head_node->total_element - 1; i >= n - 1; i--) {
+				for (i = head_node->total_element - 1; i >= location - 1; i--) {
 					*(head_node->p0 + i + 1) = *(head_node->p0 + i);
 				}
 				//在n处插入x
-				*(head_node->p0 + n - 1) = x;
+				*(head_node->p0 + location - 1) = data;
 			}
 		}
 		else {	//表满了
 			//扩增表
 			type new_p = (type)malloc(sizeof(type) * (head_node->length + ADD));
+			if (new_p == NULL) {
+				return NULL;
+			}
 			//在首
-			if (n == 1) {
+			if (location == 1) {
 				//先将x赋给新表的首元素
-				*new_p = x;
+				*new_p = data;
 				//再将旧表的数据从头开始依次拷贝到新表里
 				for (i = 0; i < head_node->total_element; i++) {
 					*(new_p + i + 1) = *(head_node->p0 + i);
 				}
 			}
-			else if (n == head_node->total_element) {	//在尾
+			else if (location == head_node->total_element) {	//在尾
 				//将旧表的数据从头开始依次拷贝到新表里
 				for (i = 0; i < head_node->total_element; i++) {
 					*(new_p + i) = *(head_node->p0 + i);
 				}
 				//将x赋给新表的尾元素
-				*(new_p + head_node->total_element) = x;
+				*(new_p + head_node->total_element) = data;
 			}
 			else {	//在中间
 				//先拷贝要插入位前的所有元素
-				for (i = 0; i < n - 1; i++) {
+				for (i = 0; i < location - 1; i++) {
 					*(new_p + i) = *(head_node->p0 + i);
 				}
 				//赋值x到插入位
-				*(new_p + i) = x;
+				*(new_p + i) = data;
 				//再拷贝插入位后的元素
 				for (; i < head_node->total_element; i++) {
 					*(new_p + i + 1) = *(head_node->p0 + i);
@@ -278,24 +303,26 @@ hn* Insert_elements(hn* head_node, int n, int x) {
 }
 
 /* 删除数据元素 */
-hn* Remove_elements(hn* head_node, int n) {
+hn* Remove_elements(hn* head_node) {
+	printf("输入删除位：");
+	scanf_s("%d", &location);
 	//头结点存在、表存在、有数据元素、删除位置合理，则删除
-	if (head_node != NULL && head_node->p0 != NULL && head_node->total_element >= 1 && n >= 1 && n <= head_node->total_element) {
+	if (head_node != NULL && head_node->p0 != NULL && head_node->total_element >= 1 && location >= 1 && location <= head_node->total_element) {
 		int i;
 		//删除头
-		if (n == 1) {
+		if (location == 1) {
 			//直接从第二个元素开始往前覆盖
 			for (i = 1; i < head_node->total_element; i++) {
 				*(head_node->p0 + i - 1) = *(head_node->p0 + i);
 			}
 		}
-		else if (n == head_node->total_element) {	//删除尾
+		else if (location == head_node->total_element) {	//删除尾
 			//删除尾部不需要做任何操作，总元素数量减1，就相当于把最后一个元素给删除了，在我们的理解中，
 			//total_element包含的才是有效的值，在这之外的虽然可以访问，我们认为是无效的访问。
 		}
 		else {	//删除中间
 			//从删除位的后一位开始往前移动一位
-			for (i = n; i < head_node->total_element; i++) {
+			for (i = location; i < head_node->total_element; i++) {
 				*(head_node->p0 + i - 1) = *(head_node->p0 + i);
 			}
 		}
@@ -312,11 +339,13 @@ hn* Remove_elements(hn* head_node, int n) {
 }
 
 /* 修改数据元素 */
-hn* Modify_element(hn* head_node, int n, int x) {
+hn* Modify_element(hn* head_node) {
+	printf("输入修改位置及修改值，使用逗号分隔：");
+	scanf_s("%d,%d", &location, &data);
 	//头结点存在、表存在、有数据元素、修改位置合理，则修改
-	if (head_node != NULL && head_node->p0 != NULL && head_node->total_element >= 1 && n >= 1 && n <= head_node->total_element) {
+	if (head_node != NULL && head_node->p0 != NULL && head_node->total_element >= 1 && location >= 1 && location <= head_node->total_element) {
 		//修改值
-		*(head_node->p0 + n - 1) = x;
+		*(head_node->p0 + location - 1) = data;
 	}
 
 	//修改完成

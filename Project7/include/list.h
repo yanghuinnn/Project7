@@ -4,7 +4,7 @@
 #ifndef __LIST_H__
 #define __LIST_H__
 
-#define fail -2147483648; 
+#define fail -999999999; 
 
 
 typedef int* type;
@@ -38,28 +38,28 @@ int Get_first(hn* head_node);
 int Get_end(hn* head_node);
 
 /* 获取某一元素的前驱 */
-int Get_front(hn* head_node, int n);
+int Get_front(hn* head_node);
 
 /* 获取某一元素的后继 */
-int Get_rear(hn* head_node, int n);
+int Get_rear(hn* head_node);
 
 /* 读取某一位置的数据元素的值 */
-int Read_values(hn* head_node, int n);
+int Read_values(hn* head_node);
 
 /* 查找表中是否存在某个值，有匹配，则输出该数据元素的位置 */
-void Find_value(hn* head_node, int x);
+void Find_value(hn* head_node);
 
 /* 打印顺序表 */
 void Print_table(hn* head_node);
 
 /* 插入数据元素 */
-hn* Insert_elements(hn* head_node, int n, int x);
+hn* Insert_elements(hn* head_node);
 
 /* 删除数据元素 */
-hn* Remove_elements(hn* head_node, int n);
+hn* Remove_elements(hn* head_node);
 
 /* 修改数据元素 */
-hn* Modify_element(hn* head_node, int n, int x);
+hn* Modify_element(hn* head_node);
 
 #endif // !__LIST_H__
 
