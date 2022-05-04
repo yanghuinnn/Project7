@@ -59,7 +59,7 @@ hn* Insert_elements(hn* head_node, int n, int x);
 hn* Remove_elements(hn* head_node, int n);
 
 /* 修改数据元素 */
-hn* Modify_element();
+hn* Modify_element(hn* head_node, int n, int x);
 
 #endif // !__LIST_H__
 

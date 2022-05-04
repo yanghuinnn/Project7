@@ -1,5 +1,6 @@
 #include "../include/list.h"
 
+#define ADD 50
 
 /* 创建一个空的顺序表 */
 hn* Create_table() {
@@ -194,18 +195,130 @@ void Print_table(hn* head_node) {
 
 /* 插入数据元素 */
 hn* Insert_elements(hn* head_node, int n, int x) {
-	//头结点存在、表存在
-	if (head_node != NULL && head_node->p0 != NULL) {
-		//插入
+	//头结点存在、表存在、要插入的位置合理，才能插入
+	if (head_node != NULL && head_node->p0 != NULL && n >= 0 && n <= (head_node->total_element + 1)) {
+		int i;
+		//表没满
+		if (head_node->total_element < head_node->length) {
+			//头部插入
+			if (n == 1) {
+				//从最后开始，先把所有元素往后移一位
+				for (i = head_node->total_element - 1; i >= 0; i--) {
+					*(head_node->p0 + i + 1) = *(head_node->p0 + i);
+				}
+				//将值x赋给首元素
+				*(head_node->p0) = x;
+			}
+			else if (n == head_node->total_element) {	//尾部插入
+				//直接赋值
+				*(head_node->p0 + head_node->total_element) = x;
+			}
+			else {	//中间插入
+				//从最后一个元素开始，直到被插入位置的元素，将它们依次向后移动一位
+				for (i = head_node->total_element - 1; i >= n - 1; i--) {
+					*(head_node->p0 + i + 1) = *(head_node->p0 + i);
+				}
+				//在n处插入x
+				*(head_node->p0 + n - 1) = x;
+			}
+		}
+		else {	//表满了
+			//扩增表
+			type new_p = (type)malloc(sizeof(type) * (head_node->length + ADD));
+			//在首
+			if (n == 1) {
+				//先将x赋给新表的首元素
+				*new_p = x;
+				//再将旧表的数据从头开始依次拷贝到新表里
+				for (i = 0; i < head_node->total_element; i++) {
+					*(new_p + i + 1) = *(head_node->p0 + i);
+				}
+			}
+			else if (n == head_node->total_element) {	//在尾
+				//将旧表的数据从头开始依次拷贝到新表里
+				for (i = 0; i < head_node->total_element; i++) {
+					*(new_p + i) = *(head_node->p0 + i);
+				}
+				//将x赋给新表的尾元素
+				*(new_p + head_node->total_element) = x;
+			}
+			else {	//在中间
+				//先拷贝要插入位前的所有元素
+				for (i = 0; i < n - 1; i++) {
+					*(new_p + i) = *(head_node->p0 + i);
+				}
+				//赋值x到插入位
+				*(new_p + i) = x;
+				//再拷贝插入位后的元素
+				for (; i < head_node->total_element; i++) {
+					*(new_p + i + 1) = *(head_node->p0 + i);
+				}
+			}
+
+			//把旧表释放
+			free(head_node->p0);
+
+			//把new_p赋给head_node->p0
+			head_node->p0 = new_p;
+
+			//表长要变
+			head_node->length += ADD;
+		}
+		
+		//表中数据元素总量要变
+		head_node->total_element++;
+	}
+	else {	//不能插入
 
 	}
+	
+	//插入完成
+	return head_node;
 
 }
 
 /* 删除数据元素 */
 hn* Remove_elements(hn* head_node, int n) {
-	//头结点存在、表存在、有数据元素
+	//头结点存在、表存在、有数据元素、删除位置合理，则删除
+	if (head_node != NULL && head_node->p0 != NULL && head_node->total_element >= 1 && n >= 1 && n <= head_node->total_element) {
+		int i;
+		//删除头
+		if (n == 1) {
+			//直接从第二个元素开始往前覆盖
+			for (i = 1; i < head_node->total_element; i++) {
+				*(head_node->p0 + i - 1) = *(head_node->p0 + i);
+			}
+		}
+		else if (n == head_node->total_element) {	//删除尾
+			//删除尾部不需要做任何操作，总元素数量减1，就相当于把最后一个元素给删除了，在我们的理解中，
+			//total_element包含的才是有效的值，在这之外的虽然可以访问，我们认为是无效的访问。
+		}
+		else {	//删除中间
+			//从删除位的后一位开始往前移动一位
+			for (i = n; i < head_node->total_element; i++) {
+				*(head_node->p0 + i - 1) = *(head_node->p0 + i);
+			}
+		}
+		
+		//总元素数量减1
+		head_node->total_element--;
+	}
+	else {	//不能删除
 
+	}
+
+	//删除结束
+	return head_node;
 }
 
+/* 修改数据元素 */
+hn* Modify_element(hn* head_node, int n, int x) {
+	//头结点存在、表存在、有数据元素、修改位置合理，则修改
+	if (head_node != NULL && head_node->p0 != NULL && head_node->total_element >= 1 && n >= 1 && n <= head_node->total_element) {
+		//修改值
+		*(head_node->p0 + n - 1) = x;
+	}
 
+	//修改完成
+	return head_node;
+}
